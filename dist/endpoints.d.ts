@@ -1,0 +1,12 @@
+import { Campaign, CampaignList, Member, MemberList, Post, PostList, Root, RootList, User, Webhook, WebhookList } from './data';
+import { CampaignSchema, MemberSchema, PostSchema, UserSchema, WebhookSchema } from './schemas';
+import { PatreonToken } from './types';
+export declare const campaignById: (schema: CampaignSchema) => (accessToken: PatreonToken, id: string) => Promise<Root<Campaign>>;
+export declare const campaignMembersById: (schema: MemberSchema) => (accessToken: PatreonToken, id: string) => Promise<RootList<MemberList>>;
+export declare const campaignPostsById: (schema: PostSchema) => (accessToken: PatreonToken, id: string) => Promise<RootList<PostList>>;
+export declare const campaigns: (schema: CampaignSchema) => (accessToken: PatreonToken) => Promise<RootList<CampaignList>>;
+export declare const identity: (schema: UserSchema) => (accessToken: PatreonToken) => Promise<Root<User>>;
+export declare const memberById: (schema: MemberSchema) => (accessToken: PatreonToken, id: string) => Promise<Root<Member>>;
+export declare const postById: (schema: PostSchema) => (accessToken: PatreonToken, id: string) => Promise<Root<Post>>;
+export declare const webhookById: (schema: WebhookSchema) => (accessToken: PatreonToken, id: string) => Promise<Root<Webhook>>;
+export declare const webhooks: (schema: WebhookSchema) => (accessToken: PatreonToken) => Promise<RootList<WebhookList>>;

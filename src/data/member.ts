@@ -1,39 +1,34 @@
-import { BaseType, IData } from "./base_data"
-import { Campaign } from "./campaign";
-import { PledgeEvent } from "./pledge_event";
-import { User } from "./user";
+import { Address } from './address'
+import { BaseType, IData } from './base_data'
+import { Campaign } from './campaign'
+import { PledgeEventList } from './pledge_event'
+import { TierList } from './tier'
+import { User } from './user'
 
-interface Attributes
-{
-    readonly currently_entitled_amount_cents?: number;
-    readonly email?: string;
-    readonly full_name?: string;
-    readonly is_follower?: boolean;
-    readonly last_charge_date?: Date;
-    readonly last_charge_status?: string;
-    readonly lifetime_support_cents?: number;
-    readonly note?: string;
-    readonly patron_status?: string;
-    readonly pledge_relationship_start?: Date;
-    readonly will_pay_amount_cents?: number;
-};
-
-interface Relationships
-{
-    //address?: Address
-    readonly campaign?: Campaign;
-    //currently_entitled_tiers: Tier[]
-    readonly user?: User;
-    readonly pledge_history?: PledgeEvent[];
+interface Attributes {
+  readonly currently_entitled_amount_cents?: number
+  readonly email?: string
+  readonly full_name?: string
+  readonly is_follower?: boolean
+  readonly last_charge_date?: Date | null
+  readonly last_charge_status?: 'Paid' | 'Declined' | 'Deleted' | 'Pending' | 'Refunded' | 'Fraud' | 'Other' | null
+  readonly lifetime_support_cents?: number
+  readonly note?: string
+  readonly patron_status?: 'active_patron' | 'declined_patron' | 'former_patron' | null
+  readonly pledge_relationship_start?: Date | null
+  readonly will_pay_amount_cents?: number
 }
 
-interface CampaignData extends IData
-{
-    readonly attributes?: Attributes;
-    readonly relationships?: Relationships;
+interface Relationships {
+  readonly address?: Address
+  readonly campaign?: Campaign
+  readonly currently_entitled_tiers: TierList
+  readonly pledge_history?: PledgeEventList
+  readonly user?: User
 }
 
-export class Member extends BaseType<Member>
-{
-    public readonly data?: CampaignData;
-}
+export type MemberData = IData<'member', Attributes, Relationships>
+
+export interface Member extends BaseType<MemberData> { }
+
+export interface MemberList extends BaseType<MemberData[]> { } { }

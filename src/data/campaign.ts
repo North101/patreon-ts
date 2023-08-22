@@ -1,49 +1,50 @@
-import { BaseType, IData } from "./base_data"
-import { User } from "./user";
+import { BaseType, IData } from './base_data'
+import { BenefitList } from './benefit'
+import { GoalList } from './goal'
+import { TierList } from './tier'
+import { User } from './user'
 
-interface Attributes
-{
-    readonly created_at?: string;
-    readonly creation_name?: string;
-    readonly discord_server_id?: string;
-    readonly google_analytics_id?: string;
-    readonly has_rss?: boolean;
-    readonly has_sent_rss_notify?: boolean;
-    readonly image_small_url?: string;
-    readonly image_url?: string;
-    readonly is_charged_immediately?: boolean;
-    readonly is_monthly?: boolean;
-    readonly is_nsfw?: boolean;
-    readonly main_video_embed?: string;
-    readonly main_video_url?: string;
-    readonly one_liner?: string;
-    readonly patron_count?: number;
-    readonly pay_per_name?: string;
-    readonly pledge_url?: string;
-    readonly published_at?: string;
-    readonly rss_artwork_url?: string;
-    readonly rss_feed_title?: string;
-    readonly show_earnings?: boolean;
-    readonly summary?: string;
-    readonly thanks_embed?: string;
-    readonly thanks_msg?: string;
-    readonly thanks_video_url?: string;
-    readonly url?: string;
-    readonly vanity?: string;
-};
-
-interface Relationships
-{
-    readonly creator?: User;
+interface Attributes {
+  readonly created_at?: string
+  readonly creation_name?: string | null
+  readonly discord_server_id?: string | null
+  readonly google_analytics_id?: string | null
+  readonly has_rss?: boolean
+  readonly has_sent_rss_notify?: boolean
+  readonly image_small_url?: string
+  readonly image_url?: string
+  readonly is_charged_immediately?: boolean | null
+  readonly is_monthly?: boolean
+  readonly is_nsfw?: boolean
+  readonly main_video_embed?: string | null
+  readonly main_video_url?: string | null
+  readonly one_liner?: string | null
+  readonly patron_count?: number
+  readonly pay_per_name?: string | null
+  readonly pledge_url?: string
+  readonly published_at?: string | null
+  readonly rss_artwork_url?: string | null
+  readonly rss_feed_title?: string
+  readonly show_earnings?: boolean
+  readonly summary?: string | null
+  readonly thanks_embed?: string | null
+  readonly thanks_msg?: string | null
+  readonly thanks_video_url?: string | null
+  readonly url?: string
+  readonly vanity?: string | null
 }
 
-interface CampaignData extends IData
-{
-    readonly attributes?: Attributes;
-    readonly relationships?: Relationships;
+interface Relationships {
+  readonly benefits?: BenefitList
+  readonly campaign_installations?: object//CampaignInstallation[]
+  readonly categories?: object//Category[]
+  readonly creator?: User
+  readonly goals?: GoalList
+  readonly tiers?: TierList
 }
 
-export class Campaign extends BaseType<Campaign>
-{
-    readonly data?: CampaignData;
-}
+export type CampaignData = IData<'campaign', Attributes, Relationships>
+
+export interface Campaign extends BaseType<CampaignData> { }
+
+export interface CampaignList extends BaseType<CampaignData[]> { } { }

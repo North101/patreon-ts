@@ -1,106 +1,127 @@
-import { format as formatUrl } from 'url';
-import { String } from 'typescript-string-operations';
-import { encode, ParsedUrlQueryInput } from 'querystring';
-import { Campaign, MemberSchema, UserSchema, CampaignMembersSchema } from "./schemas/schemas";
+import { BaseType, Campaign, CampaignList, Member, MemberList, Post, PostList, Root, RootList, User, Webhook, WebhookList } from './data'
+import { CampaignSchema, MemberSchema, PostSchema, UserSchema, WebhookSchema } from './schemas'
+import { BaseSchema } from './schemas/base_schema'
+import { PatreonToken } from './types'
 
-export const ApiHost = "www.patreon.com/api/oauth2/v2";
+const ApiHost = 'https://www.patreon.com/api/oauth2/v2/'
 
-export type SimpleEndpoint = string;
-export type ComplexEndpoint = string;
-
-export interface SimpleEndpointCollection
-{
-    Identity: SimpleEndpoint;
-    Campaigns: SimpleEndpoint;
+async function fetchPatreon<T extends BaseType<any>>(query: string, accessToken: PatreonToken): Promise<T> {
+  try {
+    const response = await fetch(query, {
+      headers: {
+        Authorization: `Bearer ${accessToken.access_token}`,
+      },
+    })
+    return await response.json()
+  } catch (error) {
+    return Promise.reject(error)
+  }
 }
 
-export interface ComplexEndpointCollection
-{
-    CampaignById: ComplexEndpoint;
-    CampaignMembersById: ComplexEndpoint;
-    CampaignPostsById: ComplexEndpoint;
-    MemberById: ComplexEndpoint;
-    PostById: ComplexEndpoint;
+function buildUrl(endpoint: string, search?: URLSearchParams): string {
+  const url = new URL(endpoint, ApiHost)
+  if (search) {
+    url.search = search?.toString()
+  }
+  return url.toString()
 }
 
-export const SimpleEndpoints: SimpleEndpointCollection =
-{
-    Identity: "identity",
-    Campaigns: "campaigns",
-};
+const buildFields = (object: BaseSchema<any>, data?: Map<string, Set<string>>) => {
+  data ??= new Map()
 
-export const ComplexEndpoints: ComplexEndpointCollection =
-{
-    CampaignById: "campaigns/{0}",
-    CampaignMembersById: "campaigns/{0}/members",
-    CampaignPostsById: "campaigns/{0}/posts",
-    MemberById: "members/{0}",
-    PostById: "posts/{0}",
-};
+  if (object.attributes) {
+    const field = object.type
+    const attributes = data.get(field) ?? new Set()
+    for (const [key, value] of Object.entries(object.attributes)) {
+      if (value) {
+        attributes.add(key)
+      }
+    }
+    data.set(field, attributes)
+  }
+  if (object.relationships) {
+    for (const value of Object.values(object.relationships)) {
+      if (value == undefined) continue
 
-export function BuildSimpleEndpoint(endpoint: SimpleEndpoint, search?: ParsedUrlQueryInput): string
-{
-    return formatUrl({
-        protocol: "https",
-        host: ApiHost,
-        pathname: endpoint,
-        slashes: true,
-        search: encode(search, "&"),
-    });
+      buildFields(value, data)
+    }
+  }
+  return data
 }
 
-export function BuildComplexEndpoint(endpoint: ComplexEndpoint, id: string, search?: ParsedUrlQueryInput): string
-{
-    return BuildSimpleEndpoint(String.Format(endpoint, id), search);
+const buildInclude = (object: BaseSchema<any>, levels?: string[], data?: Set<string>) => {
+  levels ??= []
+  data ??= new Set()
+
+  if (object.relationships) {
+    for (const [key, value] of Object.entries(object.relationships)) {
+      if (value == undefined) continue
+
+      const fieldLevels = [...levels, key]
+      data.add(fieldLevels.join('.'))
+
+      buildInclude(value, fieldLevels, data)
+    }
+  }
+
+  return data
 }
 
-function GetEndpointFieldsName(object: Campaign | MemberSchema | UserSchema): string
-{
-    let fieldsName = String.Empty;
+function BuildEndpointQuery(object: BaseSchema<any>, query?: URLSearchParams): URLSearchParams {
+  query ??= new URLSearchParams()
 
-    if (object instanceof Campaign)
-    {
-        fieldsName = "campaign";
-    }
-    else if (object instanceof MemberSchema)
-    {
-        fieldsName = "member";
-    }
-    else if (object instanceof UserSchema)
-    {
-        fieldsName = "user";
-    }
+  const fields = buildFields(object)
+  for (const [key, value] of fields.entries()) {
+    query.set(`fields[${key}]`, [...value].join(','))
+  }
 
-    return fieldsName;
+  const include = buildInclude(object)
+  if (include.size > 0) {
+    query.set(`include`, [...include].join(','))
+  }
+
+  return query
 }
 
-export function BuildEndpointQuery(object: Campaign | MemberSchema | UserSchema | CampaignMembersSchema): ParsedUrlQueryInput
-{
-    let attributesString: string = String.Empty;
-    let relationshipsString: string = String.Empty;
-
-    if (object.attributes)
-    {
-        attributesString = Object.values(object.attributes).reduce((prev, cur) => `${prev},${cur}`) as string;
-    }
-
-    if (object.relationships)
-    {
-        relationshipsString = Object.values(object.relationships).reduce((prev, cur) => `${prev},${cur}`) as string;
-    }
-
-    let query: ParsedUrlQueryInput = {};
-
-    if (attributesString)
-    {
-        const field: string = `fields[${GetEndpointFieldsName(object)}]`;
-        query[field] = attributesString;
-    }
-
-    if (relationshipsString)
-    {
-        query["include"] = relationshipsString;
-    }
-
-    return query;
+function buildRequest<T extends BaseType<any>>(endpoint: string, schema: BaseSchema<T>) {
+  const url = buildUrl(endpoint, BuildEndpointQuery(schema))
+  return (accessToken: PatreonToken) => fetchPatreon<T>(
+    url,
+    accessToken,
+  )
 }
+
+function buildComplexRequest<T extends BaseType<any>, P extends string[]>(endpoint: (...params: P) => string, schema: BaseSchema<T>) {
+  const query = BuildEndpointQuery(schema)
+  return (accessToken: PatreonToken, ...params: P) => fetchPatreon<T>(
+    buildUrl(endpoint(...params), query),
+    accessToken,
+  )
+}
+
+export const campaignById = (schema: CampaignSchema) =>
+  buildComplexRequest<Root<Campaign>, [id: string]>(id => `campaigns/${id}`, schema)
+
+export const campaignMembersById = (schema: MemberSchema) =>
+  buildComplexRequest<RootList<MemberList>, [id: string]>(id => `campaigns/${id}/members`, schema)
+
+export const campaignPostsById = (schema: PostSchema) =>
+  buildComplexRequest<RootList<PostList>, [id: string]>(id => `campaigns/${id}/posts`, schema)
+
+export const campaigns = (schema: CampaignSchema) =>
+  buildRequest<RootList<CampaignList>>('campaigns', schema)
+
+export const identity = (schema: UserSchema) =>
+  buildRequest<Root<User>>('identity', schema)
+
+export const memberById = (schema: MemberSchema) =>
+  buildComplexRequest<Root<Member>, [id: string]>(id => `members/${id}`, schema)
+
+export const postById = (schema: PostSchema) =>
+  buildComplexRequest<Root<Post>, [id: string]>(id => `posts/${id}`, schema)
+
+export const webhookById = (schema: WebhookSchema) =>
+  buildComplexRequest<Root<Webhook>, [id: string]>(id => `webhooks/${id}`, schema)
+
+export const webhooks = (schema: WebhookSchema) =>
+  buildRequest<RootList<WebhookList>>('webhooks', schema)

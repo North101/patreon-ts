@@ -1,5 +1,11 @@
-export { Campaign } from "./campaign"
-export { CampaignMembers } from "./campaign_members"
-export { Member } from "./member"
-export { User } from "./user"
-export { Root } from "./json_api"
+export type { Address, AddressList } from './address'
+export type { BaseType, Root, RootList } from './base_data'
+export type { Campaign, CampaignList } from './campaign'
+export type { Deliverable, DeliverableList } from './deliverable'
+export type { Goal, GoalList } from './goal'
+export type { Media, MediaList } from './media'
+export type { Member, MemberList } from './member'
+export type { Post, PostList } from './post'
+export type { Tier, TierList } from './tier'
+export type { User, UserList } from './user'
+export type { Webhook, WebhookList } from './webhook'
