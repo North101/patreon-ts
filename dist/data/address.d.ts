@@ -1,6 +1,6 @@
-import { BaseType, IData } from './base_data';
-import { CampaignList } from './campaign';
-import { User } from './user';
+import { BaseType, Data } from './base_data';
+import { CampaignData } from './campaign';
+import { UserData } from './user';
 interface Attributes {
     readonly addressee?: string | null;
     readonly city?: string;
@@ -13,12 +13,8 @@ interface Attributes {
     readonly state?: string | null;
 }
 interface Relationships {
-    readonly campaigns?: CampaignList;
-    readonly user?: User;
+    readonly campaigns?: BaseType<CampaignData[]>;
+    readonly user?: BaseType<UserData>;
 }
-export type AddressData = IData<'address', Attributes, Relationships>;
-export interface Address extends BaseType<AddressData> {
-}
-export interface AddressList extends BaseType<AddressData[]> {
-}
+export type AddressData = Data<'address', Attributes, Relationships>;
 export {};

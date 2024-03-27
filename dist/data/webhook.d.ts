@@ -1,6 +1,6 @@
-import { BaseType, IData } from './base_data';
-import { CampaignList } from './campaign';
-import { User } from './user';
+import { BaseType, Data } from './base_data';
+import { CampaignData } from './campaign';
+import { UserData } from './user';
 interface Attributes {
     readonly last_attempted_at?: string;
     readonly num_consecutive_times_failed?: number;
@@ -10,12 +10,8 @@ interface Attributes {
     readonly uri?: string;
 }
 interface Relationships {
-    readonly campaigns?: CampaignList;
-    readonly user?: User;
+    readonly campaigns?: BaseType<CampaignData[]>;
+    readonly user?: BaseType<UserData>;
 }
-export type WebhookData = IData<'address', Attributes, Relationships>;
-export interface Webhook extends BaseType<WebhookData> {
-}
-export interface WebhookList extends BaseType<WebhookData[]> {
-}
+export type WebhookData = Data<'address', Attributes, Relationships>;
 export {};

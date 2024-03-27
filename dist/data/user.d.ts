@@ -1,6 +1,6 @@
-import { BaseType, IData } from './base_data';
-import { Campaign } from './campaign';
-import { MemberList } from './member';
+import { BaseType, Data } from './base_data';
+import { CampaignData } from './campaign';
+import { MemberData } from './member';
 interface Attributes {
     readonly about?: string | null;
     readonly can_see_nsfw?: boolean | null;
@@ -19,12 +19,8 @@ interface Attributes {
     readonly vanity?: string | null;
 }
 interface Relationships {
-    readonly campaign?: Campaign;
-    readonly memberships?: MemberList;
+    readonly campaign?: BaseType<CampaignData>;
+    readonly memberships?: BaseType<MemberData[]>;
 }
-export type UserData = IData<'user', Attributes, Relationships>;
-export interface User extends BaseType<UserData> {
-}
-export interface UserList extends BaseType<UserData[]> {
-}
+export type UserData = Data<'user', Attributes, Relationships>;
 export {};

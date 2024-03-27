@@ -1,5 +1,5 @@
-import { BaseType, IData } from './base_data';
-import { Campaign } from './campaign';
+import { BaseType, Data } from './base_data';
+import { CampaignData } from './campaign';
 interface Attributes {
     amount_cents?: number;
     completed_percentage?: number;
@@ -9,11 +9,7 @@ interface Attributes {
     title?: string;
 }
 interface Relationships {
-    readonly campaign?: Campaign;
+    readonly campaign?: BaseType<CampaignData>;
 }
-export type GoalData = IData<'goal', Attributes, Relationships>;
-export interface Goal extends BaseType<GoalData> {
-}
-export interface GoalList extends BaseType<GoalData[]> {
-}
+export type GoalData = Data<'goal', Attributes, Relationships>;
 export {};

@@ -1,7 +1,7 @@
-import { BaseType, IData } from './base_data';
-import { Campaign } from './campaign';
-import { Tier } from './tier';
-import { User } from './user';
+import { BaseType, Data } from './base_data';
+import { CampaignData } from './campaign';
+import { TierData } from './tier';
+import { UserData } from './user';
 interface Attributes {
     readonly amount_cents?: number;
     readonly currency_code?: string;
@@ -12,13 +12,9 @@ interface Attributes {
     readonly type?: 'pledge_start' | 'pledge_upgrade' | 'pledge_downgrade' | 'pledge_delete' | 'subscription';
 }
 interface Relationships {
-    readonly campaign?: Campaign;
-    readonly patron?: User;
-    readonly tier: Tier;
+    readonly campaign?: BaseType<CampaignData>;
+    readonly patron?: BaseType<UserData>;
+    readonly tier: BaseType<TierData>;
 }
-export type PledgeEventData = IData<'pledge_event', Attributes, Relationships>;
-export interface PledgeEvent extends BaseType<PledgeEventData> {
-}
-export interface PledgeEventList extends BaseType<PledgeEventData[]> {
-}
+export type PledgeEventData = Data<'pledge_event', Attributes, Relationships>;
 export {};

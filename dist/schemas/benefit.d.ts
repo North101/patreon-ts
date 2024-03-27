@@ -1,5 +1,5 @@
-import { Benefit } from "../data/benefit";
+import { BenefitData } from "../data/benefit";
 import { BaseSchema } from "./base_schema";
-export declare class BenefitSchema extends BaseSchema<Benefit> {
+export declare class BenefitSchema extends BaseSchema<BenefitData> {
     readonly type = "benefit";
 }

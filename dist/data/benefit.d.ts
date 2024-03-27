@@ -1,7 +1,7 @@
-import { BaseType, IData } from './base_data';
-import { Campaign } from './campaign';
-import { DeliverableList } from './deliverable';
-import { TierList } from './tier';
+import { BaseType, Data } from './base_data';
+import { CampaignData } from './campaign';
+import { DeliverableData } from './deliverable';
+import { TierData } from './tier';
 interface Attributes {
     readonly app_external_id?: string | null;
     readonly app_meta?: object | null;
@@ -20,14 +20,10 @@ interface Attributes {
     readonly title?: string;
 }
 interface Relationships {
-    readonly campaign?: Campaign;
+    readonly campaign?: BaseType<CampaignData>;
     readonly campaign_installation?: object;
-    readonly deliverables: DeliverableList;
-    readonly tiers?: TierList;
+    readonly deliverables: BaseType<DeliverableData[]>;
+    readonly tiers?: BaseType<TierData[]>;
 }
-export type BenefitData = IData<'benefit', Attributes, Relationships>;
-export interface Benefit extends BaseType<BenefitData> {
-}
-export interface BenefitList extends BaseType<BenefitData[]> {
-}
+export type BenefitData = Data<'benefit', Attributes, Relationships>;
 export {};

@@ -1,9 +1,9 @@
-import { Address } from './address';
-import { BaseType, IData } from './base_data';
-import { Campaign } from './campaign';
-import { PledgeEventList } from './pledge_event';
-import { TierList } from './tier';
-import { User } from './user';
+import { AddressData } from './address';
+import { BaseType, Data } from './base_data';
+import { CampaignData } from './campaign';
+import { PledgeEventData } from './pledge_event';
+import { TierData } from './tier';
+import { UserData } from './user';
 interface Attributes {
     readonly currently_entitled_amount_cents?: number;
     readonly email?: string;
@@ -18,15 +18,11 @@ interface Attributes {
     readonly will_pay_amount_cents?: number;
 }
 interface Relationships {
-    readonly address?: Address;
-    readonly campaign?: Campaign;
-    readonly currently_entitled_tiers: TierList;
-    readonly pledge_history?: PledgeEventList;
-    readonly user?: User;
+    readonly address?: BaseType<AddressData>;
+    readonly campaign?: BaseType<CampaignData>;
+    readonly currently_entitled_tiers: BaseType<TierData[]>;
+    readonly pledge_history?: BaseType<PledgeEventData[]>;
+    readonly user?: BaseType<UserData>;
 }
-export type MemberData = IData<'member', Attributes, Relationships>;
-export interface Member extends BaseType<MemberData> {
-}
-export interface MemberList extends BaseType<MemberData[]> {
-}
+export type MemberData = Data<'member', Attributes, Relationships>;
 export {};

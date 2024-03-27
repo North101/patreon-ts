@@ -1,4 +1,4 @@
-import { BaseType, IData } from './base_data';
+import { Data } from './base_data';
 interface Attributes {
     created_at?: string;
     download_url?: string;
@@ -17,9 +17,5 @@ interface Attributes {
 }
 interface Relationships {
 }
-export type MediaData = IData<'deliverable', Attributes, Relationships>;
-export interface Media extends BaseType<MediaData> {
-}
-export interface MediaList extends BaseType<MediaData[]> {
-}
+export type MediaData = Data<'deliverable', Attributes, Relationships>;
 export {};
