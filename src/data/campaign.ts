@@ -1,8 +1,8 @@
-import { BaseType, IData } from './base_data'
-import { BenefitList } from './benefit'
-import { GoalList } from './goal'
-import { TierList } from './tier'
-import { User } from './user'
+import { BaseType, Data } from './base_data'
+import { BenefitData } from './benefit'
+import { GoalData } from './goal'
+import { TierData } from './tier'
+import { UserData } from './user'
 
 interface Attributes {
   readonly created_at?: string
@@ -35,16 +35,12 @@ interface Attributes {
 }
 
 interface Relationships {
-  readonly benefits?: BenefitList
+  readonly benefits?: BaseType<BenefitData[]>
   readonly campaign_installations?: object//CampaignInstallation[]
   readonly categories?: object//Category[]
-  readonly creator?: User
-  readonly goals?: GoalList
-  readonly tiers?: TierList
+  readonly creator?: BaseType<UserData>
+  readonly goals?: BaseType<GoalData[]>
+  readonly tiers?: BaseType<TierData[]>
 }
 
-export type CampaignData = IData<'campaign', Attributes, Relationships>
-
-export interface Campaign extends BaseType<CampaignData> { }
-
-export interface CampaignList extends BaseType<CampaignData[]> { } { }
+export type CampaignData = Data<'campaign', Attributes, Relationships>

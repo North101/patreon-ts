@@ -1,7 +1,6 @@
-import { BaseType, IData } from './base_data'
-import { Campaign } from './campaign'
-import { Tier } from './tier'
-import { User } from './user'
+import { BaseType, Data } from './base_data'
+import { CampaignData } from './campaign'
+import { UserData } from './user'
 
 interface Attributes {
   app_id?: number
@@ -12,18 +11,14 @@ interface Attributes {
   is_paid?: boolean
   is_public?: boolean
   published_at?: string | null
-  tiers?: Tier[] | null
+  tiers?: object[] | null
   title?: string | null
   url?: string
 }
 
 interface Relationships {
-  readonly campaign?: Campaign
-  readonly user?: User
+  readonly campaign?: BaseType<CampaignData>
+  readonly user?: BaseType<UserData>
 }
 
-export type PostData = IData<'deliverable', Attributes, Relationships>
-
-export interface Post extends BaseType<PostData> { }
-
-export interface PostList extends BaseType<PostData[]> { } { }
+export type PostData = Data<'deliverable', Attributes, Relationships>

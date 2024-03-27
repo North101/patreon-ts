@@ -1,6 +1,6 @@
-import { BaseType, IData } from './base_data'
-import { BenefitList } from './benefit'
-import { Campaign } from './campaign'
+import { BaseType, Data } from './base_data'
+import { BenefitData } from './benefit'
+import { CampaignData } from './campaign'
 
 interface Attributes {
   amount_cents?: number
@@ -22,13 +22,9 @@ interface Attributes {
 }
 
 interface Relationships {
-  readonly benefits?: BenefitList
-  readonly campaign?: Campaign
-  readonly tier_image?: Tier
+  readonly benefits?: BaseType<BenefitData[]>
+  readonly campaign?: BaseType<CampaignData>
+  readonly tier_image?: BaseType<TierData>
 }
 
-export type TierData = IData<'deliverable', Attributes, Relationships>
-
-export interface Tier extends BaseType<TierData> { }
-
-export interface TierList extends BaseType<TierData[]> { } { }
+export type TierData = Data<'deliverable', Attributes, Relationships>

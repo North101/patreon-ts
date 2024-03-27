@@ -1,6 +1,6 @@
-import { Tier } from "../data/tier"
+import { TierData } from "../data/tier"
 import { BaseSchema } from "./base_schema"
 
-export class TierSchema extends BaseSchema<Tier> {
+export class TierSchema extends BaseSchema<TierData> {
   readonly type = 'tier'
 }

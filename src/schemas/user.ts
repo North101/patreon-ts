@@ -1,6 +1,6 @@
-import { User } from "../data/user"
+import { UserData } from "../data/user"
 import { BaseSchema } from "./base_schema"
 
-export class UserSchema extends BaseSchema<User> {
+export class UserSchema extends BaseSchema<UserData> {
   readonly type = 'user'
 }

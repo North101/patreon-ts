@@ -9,7 +9,7 @@ import { TierData } from "./tier"
 import { UserData } from "./user"
 import { WebhookData } from "./webhook"
 
-export interface ILinks {
+export interface Links {
   self?: string
   related?: {
     href: string
@@ -30,29 +30,26 @@ export interface Meta {
   pagination: Pagination
 }
 
-export interface IData<T extends string, A, R> {
+export interface Data<T extends string, A, R> {
   id: string
   type: T
   attributes?: A
   relationships?: R
 }
 
-type IDataAny = IData<any, any, any>
+export type DataType = Data<any, any, any>
 
-type IDataType = IDataAny | IDataAny[]
-
-export interface BaseType<D extends IDataType> {
+export interface BaseType<D extends DataType | DataType[]> {
   data: D
 }
 
-interface BaseRoot<D extends BaseType<IDataType>> {
-  data: D['data']
-  links: ILinks
+export interface BaseRoot<D extends DataType | DataType[]> extends BaseType<D> {
+  links: Links
   included: (AddressData | CampaignData | DeliverableData | GoalData | MediaData | MemberData | PostData | TierData | UserData | WebhookData)[]
 }
 
-export interface Root<D extends BaseType<IDataAny>> extends BaseRoot<D> { }
+export interface Root<D extends DataType> extends BaseRoot<D> { }
 
-export interface RootList<D extends BaseType<IDataAny[]>> extends BaseRoot<D> {
+export interface RootList<D extends DataType> extends BaseRoot<D[]> {
   meta: Meta
 }

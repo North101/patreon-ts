@@ -1,8 +1,8 @@
-import { BaseType, IData } from './base_data'
-import { Benefit } from './benefit'
-import { Campaign } from './campaign'
-import { Member } from './member'
-import { User } from './user'
+import { BaseType, Data } from './base_data'
+import { BenefitData } from './benefit'
+import { CampaignData } from './campaign'
+import { MemberData } from './member'
+import { UserData } from './user'
 
 interface Attributes {
   readonly completed_at?: string | null
@@ -11,14 +11,10 @@ interface Attributes {
 }
 
 interface Relationships {
-  readonly benefit?: Benefit
-  readonly campaign?: Campaign
-  readonly member?: Member
-  readonly user?: User
+  readonly benefit?: BaseType<BenefitData>
+  readonly campaign?: BaseType<CampaignData>
+  readonly member?: BaseType<MemberData>
+  readonly user?: BaseType<UserData>
 }
 
-export type DeliverableData = IData<'deliverable', Attributes, Relationships>
-
-export interface Deliverable extends BaseType<DeliverableData> { }
-
-export interface DeliverableList extends BaseType<DeliverableData[]> { } { }
+export type DeliverableData = Data<'deliverable', Attributes, Relationships>
