@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'Patreon-TS',
-      fileName: 'patreon-ts'
+      fileName: 'index'
     },
   },
   plugins: [
