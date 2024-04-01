@@ -37,6 +37,19 @@ export interface Data<T extends string, A, R> {
   relationships?: R
 }
 
+export interface JsonApiError {
+  code: string
+  code_name: string
+  detail: string
+  id: string
+  status: string
+  title: string
+}
+
+export interface JsonApiErrors {
+  errors: JsonApiError[]
+}
+
 export type DataType = Data<any, any, any>
 
 export interface BaseType<D extends DataType | DataType[]> {

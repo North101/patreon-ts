@@ -17,17 +17,17 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "simple-oauth2": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.5.6",
+    "@types/node": "^20.12.2",
     "@types/simple-oauth2": "^5.0.4",
     "typescript": "^5.2.2",
-    "vite": "^5.2.6",
-    "vite-plugin-dts": "^3.5.2"
+    "vite": "^5.2.7",
+    "vite-plugin-dts": "^3.8.1"
   }
 }

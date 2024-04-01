@@ -1,5 +1,5 @@
 import { BaseType, Root, RootList } from './data'
-import { BaseRoot, DataType } from './data/base_data'
+import { BaseRoot, DataType, JsonApiErrors } from './data/base_data'
 import { CampaignData } from './data/campaign'
 import { MemberData } from './data/member'
 import { PostData } from './data/post'
@@ -11,7 +11,7 @@ import { PatreonToken } from './types'
 
 const ApiHost = 'https://www.patreon.com/api/oauth2/v2/'
 
-async function fetchPatreon<T extends BaseType<any>>(query: string, accessToken: PatreonToken): Promise<T> {
+async function fetchPatreon<T extends BaseType<any>>(query: string, accessToken: PatreonToken): Promise<T | JsonApiErrors> {
   try {
     const response = await fetch(query, {
       headers: {
